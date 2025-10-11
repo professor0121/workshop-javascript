@@ -2,10 +2,10 @@
   "name": "10-10-2025",
   "version": "1.0.0",
   "description": "",
-  "main": "index.py",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx nodemon index.py"
+    "start": "npx nodemon index.js"
   },
   "author": "",
   "license": "ISC"
