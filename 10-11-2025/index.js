@@ -26,10 +26,10 @@ const arr =Object.entries(product)
 // 4.Update Nested Value Without Mutation
 // Create a new object with city changed to "Tokyo" (don’t mutate original)
  const person = { name: "John", address: { city: "London", zip: 12345 } };
-  const person2 = {...person,address: { city: "London", zip: 12345 } }
-  person2.address.city = "Tokyo"
-  //console.log(person2)
-  //console.log(person)
+  const person2 = {...person,address: { city: "Tokyo", zip: 12345 } }
+  // person2.address.city = "Tokyo"
+  console.log(person2)
+  console.log(person)
 
 //  5.Filter Object Keys by Condition
 // Create a new object with only students scoring 60 or above

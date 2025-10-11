@@ -31,8 +31,8 @@ const arr =Object.entries(product)
 ```js
 // Create a new object with city changed to "Tokyo" (don’t mutate original)
  const person = { name: "John", address: { city: "London", zip: 12345 } };
-  const person2 = {...person,address: { city: "London", zip: 12345 } }
-  person2.address.city = "Tokyo"
+  const person2 = {...person,address: { city: "Tokyo", zip: 12345 } }
+  // person2.address.city = "Tokyo"
   //console.log(person2)
   //console.log(person)
   ```
