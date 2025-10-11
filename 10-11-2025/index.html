@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List App</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-6xl mx-auto">
+            <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">Todo List</h1>
+            
+            <!-- Add Todo Section -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <div class="flex gap-4">
+                    <input 
+                        type="text" 
+                        id="input-todo" 
+                        placeholder="Enter a new todo..." 
+                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                    <button 
+                        onclick="addTodo()" 
+                        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                        Add Todo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Todo Columns -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- To Do Column -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-700 border-b-2 border-red-500 pb-2">To Do</h2>
+                    <div id="todo-column" class="space-y-3 min-h-[200px]">
+                        <!-- Todos will be dynamically added here -->
+                    </div>
+                </div>
+
+                <!-- In Progress Column -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-700 border-b-2 border-yellow-500 pb-2">In Progress</h2>
+                    <div id="progress-column" class="space-y-3 min-h-[200px]">
+                        <!-- In progress todos will be here -->
+                    </div>
+                </div>
+
+                <!-- Done Column -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-700 border-b-2 border-green-500 pb-2">Done</h2>
+                    <div id="done-column" class="space-y-3 min-h-[200px]">
+                        <!-- Completed todos will be here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Todo state management
+        let todos = [];
+        let nextId = 1;
+
+        // Load todos from localStorage on page load
+        function loadTodos() {
+            const savedTodos = localStorage.getItem('todos');
+            if (savedTodos) {
+                todos = JSON.parse(savedTodos);
+                nextId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 1;
+            }
+            renderTodos();
+        }
+
+        // Save todos to localStorage
+        function saveTodos() {
+            localStorage.setItem('todos', JSON.stringify(todos));
+        }
+
+        // Add new todo
+        function addTodo() {
+            const input = document.getElementById('input-todo');
+            const text = input.value.trim();
+            
+            if (text === '') {
+                alert('Please enter a todo item');
+                return;
+            }
+
+            const newTodo = {
+                id: nextId++,
+                text: text,
+                status: 'todo',
+                createdAt: new Date().toISOString()
+            };
+
+            todos.push(newTodo);
+            input.value = '';
+            saveTodos();
+            renderTodos();
+        }
+
+        // Update todo status
+        function updateTodoStatus(id, newStatus) {
+            const todo = todos.find(t => t.id === id);
+            if (todo) {
+                todo.status = newStatus;
+                saveTodos();
+                renderTodos();
+            }
+        }
+
+        // Delete todo
+        function deleteTodo(id) {
+            todos = todos.filter(t => t.id !== id);
+            saveTodos();
+            renderTodos();
+        }
+
+        // Render all todos in their respective columns
+        function renderTodos() {
+            const todoColumn = document.getElementById('todo-column');
+            const progressColumn = document.getElementById('progress-column');
+            const doneColumn = document.getElementById('done-column');
+
+            // Clear all columns
+            todoColumn.innerHTML = '';
+            progressColumn.innerHTML = '';
+            doneColumn.innerHTML = '';
+
+            // Group todos by status
+            const todoTodos = todos.filter(t => t.status === 'todo');
+            const progressTodos = todos.filter(t => t.status === 'progress');
+            const doneTodos = todos.filter(t => t.status === 'done');
+
+            // Render todo column
+            todoTodos.forEach(todo => {
+                todoColumn.appendChild(createTodoCard(todo, 'todo'));
+            });
+
+            // Render progress column
+            progressTodos.forEach(todo => {
+                progressColumn.appendChild(createTodoCard(todo, 'progress'));
+            });
+
+            // Render done column
+            doneTodos.forEach(todo => {
+                doneColumn.appendChild(createTodoCard(todo, 'done'));
+            });
+        }
+
+        // Create todo card element
+        function createTodoCard(todo, currentStatus) {
+            const card = document.createElement('div');
+            card.className = 'bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow';
+            
+            const statusConfig = {
+                todo: { 
+                    nextStatus: 'progress', 
+                    nextText: 'Start', 
+                    nextColor: 'bg-yellow-500 hover:bg-yellow-600',
+                    deleteColor: 'bg-red-500 hover:bg-red-600'
+                },
+                progress: { 
+                    nextStatus: 'done', 
+                    nextText: 'Complete', 
+                    nextColor: 'bg-green-500 hover:bg-green-600',
+                    deleteColor: 'bg-red-500 hover:bg-red-600'
+                },
+                done: { 
+                    nextStatus: null, 
+                    nextText: null, 
+                    nextColor: null,
+                    deleteColor: 'bg-red-500 hover:bg-red-600'
+                }
+            };
+
+            const config = statusConfig[currentStatus];
+            
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-2">
+                    <p class="text-gray-800 flex-1">${todo.text}</p>
+                    <button 
+                        onclick="deleteTodo(${todo.id})" 
+                        class="ml-2 px-2 py-1 text-white text-xs rounded ${config.deleteColor} transition-colors"
+                    >
+                        ×
+                    </button>
+                </div>
+                <div class="text-xs text-gray-500 mb-3">
+                    ${new Date(todo.createdAt).toLocaleDateString()}
+                </div>
+                ${config.nextStatus ? `
+                    <button 
+                        onclick="updateTodoStatus(${todo.id}, '${config.nextStatus}')" 
+                        class="w-full px-3 py-1 text-white text-sm rounded ${config.nextColor} transition-colors"
+                    >
+                        ${config.nextText}
+                    </button>
+                ` : `
+                    <div class="text-center text-green-600 font-semibold text-sm">
+                        ✓ Completed
+                    </div>
+                `}
+            `;
+
+            return card;
+        }
+
+        // Allow adding todos with Enter key
+        document.getElementById('input-todo').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addTodo();
+            }
+        });
+
+        // Load todos when page loads
+        loadTodos();
+    </script>
+</body>
+
+</html>

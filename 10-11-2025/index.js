@@ -91,3 +91,34 @@ const users1 = [
 
 const user2={...users1}
 // console.log(user2)
+
+
+
+const newObject={
+  name: "urvashi",
+  age:22,
+  address:{
+    city:"sagar",
+    pinCode:470002
+  }
+}
+Object.freeze(newObject);
+const newObject2=newObject;
+newObject.name="mahi"
+console.log(newObject)
+console.log(newObject2)
+
+
+
+//json rest api ...
+
+const url="https://jsonplaceholder.typicode.com/todos/1"
+function getJsonData(url){
+
+  fetch(url)
+  .then(resposne=>console.log(resposne))
+  .catch(error=>console.log(error))
+  .finally("the api is called")
+}
+
+getJsonData(url)
