@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <p>hello</p>
+    <div id="container">
+
+    </div>
+</body>
+<script>
+    const container = document.getElementById("container")
+    const getUser = async () => {
+        try {
+            const resposne = await fetch('https://jsonplaceholder.typicode.com/users')
+            const data = await resposne.json()
+            console.log(data)
+            rederUser(data)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    getUser();
+    const rederUser = (data) => {
+     container.innerHTML=data
+     .map(user=>(
+        `<div>
+            <p>${user.id}</p>
+            <p>${user.name}</p>
+            <p>${user.phone}</p>
+            <p>${user.website}</p>
+            <hr/>
+        </div>`
+     ))
+     .splice(',')
+     .join('')
+    }
+
+</script>
+
+</html>
