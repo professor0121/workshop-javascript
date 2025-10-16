@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const ApiDataRendering = ({cart,setCart}) => {
+const ApiDataRendering = ({ cart, setCart ,setProducts}) => {
+    const navigate = useNavigate();
     const [product, setProduct] = useState()
     const url = 'https://dummyjson.com/products'
     useEffect(() => {
@@ -8,12 +10,20 @@ const ApiDataRendering = ({cart,setCart}) => {
             const response = await fetch(url)
             const data = await response.json();
             setProduct(data.products)
+            setProducts(data.products);
+
         }
         fetchData();
     }, [url])
 
-   const handleCartEvent=(item)=>{
- setCart((prevCart) => [...prevCart, item]);   }
+    const handleCartEvent = (item) => {
+        setCart((cart) => [...cart, item]);
+    }
+
+    const handleProductDetails = (productId) => {
+        navigate(`/product-details/?id=${productId}`)
+    }
+    //  console.log(cart)
     return (
         <div
             style={{
@@ -55,8 +65,16 @@ const ApiDataRendering = ({cart,setCart}) => {
                                 padding: "10px 10px",
                                 cursor: "pointer"
                             }}
-                            onClick={()=>handleCartEvent(element)}
-                        >Add to cart</button>
+                            onClick={() => handleCartEvent(element)}
+                        >add to cart</button>
+                        <button
+                            style={{
+                                width: "100%",
+                                padding: "10px 10px",
+                                cursor: "pointer"
+                            }}
+                            onClick={() => handleProductDetails(element.id)}
+                        >show details</button>
                     </div>
                 </div>
             ))}
