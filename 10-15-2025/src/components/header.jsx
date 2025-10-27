@@ -2,8 +2,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const NavMenu=[
-    {link:"/all-product",tag:"Product"},
-    {link:"/cart",tag:"Cart"},
+    {id:1,link:"/all-product",tag:"Product"},
+    {id:2,link:"/cart",tag:"Cart"},
+    {id:3,link:"/login",tag:"Login"}
 ]
 
 const Header = () => {
@@ -27,7 +28,7 @@ const Header = () => {
          >
                 {
                     NavMenu?.map((menu)=>(
-                        <div>
+                        <div key={menu.id}>
                             <Link to={menu.link}>{menu.tag}</Link>
                         </div>
                     ))
