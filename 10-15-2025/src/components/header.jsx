@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom'
 const NavMenu=[
     {id:1,link:"/all-product",tag:"Product"},
     {id:2,link:"/cart",tag:"Cart"},
-    {id:3,link:"/login",tag:"Login"}
+    {id:3,link:"/login",tag:"Login"},
+    {id:4,link:"/checkout",tag:"CheckOut"},
 ]
 
 const Header = () => {
